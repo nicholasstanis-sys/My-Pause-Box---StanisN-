@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breaking My Box: From Distraction to Discipline</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            overflow-x: hidden;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            color: #fff;
+        }
+
+        .container {
+            width: 100%;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            height: 100vh;
+        }
+
+        section {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            scroll-snap-align: start;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .content {
+            max-width: 1200px;
+            width: 100%;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .content.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            top: -250px;
+            right: -250px;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 50%;
+            bottom: -150px;
+            left: -150px;
+            animation: float 15s infinite ease-in-out reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -50px) rotate(120deg); }
+            66% { transform: translate(-20px, 20px) rotate(240deg); }
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+            padding-bottom: 0.2em;
+            background: linear-gradient(120deg, #fff, #a8edea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #ffd89b;
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 300;
+        }
+
+        /* The Trap Section */
+        .trap {
+            background: linear-gradient(135deg, #fc4a1a 0%, #f7b733 100%);
+        }
+
+        .trap-box {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 30px;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .problem-text {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .icon-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .icon-item:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .icon-emoji {
+            font-size: 3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Expansion Section */
+        .expansion {
+            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+        }
+
+        .strategy-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .strategy-card {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .strategy-card:hover {
+            transform: scale(1.05) rotate(2deg);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #fff;
+        }
+
+        .card-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Goals Section */
+        .goals {
+            background: linear-gradient(135deg, #4568dc 0%, #b06ab3 100%);
+        }
+
+        .goal-container {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .goal-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            border-left: 6px solid #ffd89b;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .goal-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: translateX(-100%);
+        }
+
+        .goal-item:hover::before {
+            animation: shimmer 1.5s infinite;
+        }
+
+        @keyframes shimmer {
+            100% { transform: translateX(100%); }
+        }
+
+        .goal-item:hover {
+            transform: translateX(10px);
+            border-left-width: 10px;
+        }
+
+        .goal-number {
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            background: #ffd89b;
+            color: #4568dc;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 50px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .goal-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffd89b;
+        }
+
+        .goal-description {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Accountability Section */
+        .accountability {
+            background: linear-gradient(135deg, #ee0979 0%, #ff6a00 100%);
+        }
+
+        .accountability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .accountability-card {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 25px;
+            text-align: center;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.4s ease;
+        }
+
+        .accountability-card:hover {
+            transform: translateY(-15px) scale(1.05);
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
+        }
+
+        .accountability-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+        }
+
+        .accountability-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: #ffd89b;
+        }
+
+        .accountability-text {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        /* Closing Section */
+        .closing {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        }
+
+        .quote-box {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 4rem;
+            border-radius: 30px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            position: relative;
+        }
+
+        .quote-mark {
+            font-size: 6rem;
+            color: rgba(255, 255, 255, 0.2);
+            position: absolute;
+            top: 10px;
+            left: 30px;
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 600;
+            font-style: italic;
+            line-height: 1.5;
+            color: #ffd89b;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-text {
+            margin-top: 2rem;
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        /* Scroll Indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            z-index: 100;
+            opacity: 0.7;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
+        }
+
+        .scroll-text {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        .scroll-arrow {
+            font-size: 2rem;
+            text-align: center;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            section {
+                padding: 3rem 1.5rem;
+            }
+
+            .trap-box, .goal-item, .accountability-card {
+                padding: 2rem;
+            }
+
+            .quote-box {
+                padding: 2.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container" id="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="content" data-section="hero">
+                <h1>Breaking My Box</h1>
+                <p class="subtitle">From Distraction to Discipline</p>
+                <p class="subtitle" style="margin-top: 1rem; font-size: 1.2rem; opacity: 0.8;">Nicholas Stanis</p>
+            </div>
+            <div class="scroll-indicator">
+                <div class="scroll-text">Scroll to explore</div>
+                <div class="scroll-arrow">↓</div>
+            </div>
+        </section>
+
+        <!-- The Trap Section -->
+        <section class="trap">
+            <div class="content" data-section="trap">
+                <div class="trap-box">
+                    <h2>My Box: The Trap of Immediate Pleasure</h2>
+                    <p class="problem-text">
+                        My box is the pull toward instant gratification. When I'm in a structured environment like rugby or work, I'm as motivated and hardworking as anyone. But the moment I'm left to my own devices, I struggle.
+                    </p>
+                    <div class="icon-grid">
+                        <div class="icon-item">
+                            <div class="icon-emoji">📱</div>
+                            <div>YouTube</div>
+                        </div>
+                        <div class="icon-item">
+                            <div class="icon-emoji">🎮</div>
+                            <div>Clash Royale</div>
+                        </div>
+                        <div class="icon-item">
+                            <div class="icon-emoji">⚡</div>
+                            <div>Instant Rewards</div>
+                        </div>
+                        <div class="icon-item">
+                            <div class="icon-emoji">🔄</div>
+                            <div>Default Habits</div>
+                        </div>
+                    </div>
+                    <p class="problem-text" style="margin-top: 2rem;">
+                        This box exists because my brain is wired for short-term rewards, and I've allowed these habits to become my default. I want to elongate my attention span and be comfortable in boredom—to grow to enjoy the peace instead of needing something to fill it.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Expansion Section -->
+        <section class="expansion">
+            <div class="content" data-section="expansion">
+                <h2>Expanding My Box</h2>
+                <p class="problem-text" style="margin-bottom: 2rem; font-size: 1.2rem; line-height: 1.7;">
+                    Meeting Grant Keenan reinforced that high performance starts with structure and visualization. Keenan was the backs and skills coach for the New Zealand Black Ferns when they won the 2017 Women's Rugby World Cup and became the first women's team ever named World Rugby Team of the Year. He has since served as High Performance Manager for the Hino Red Dolphins in Japan Rugby League One and currently serves as a technical advisor to the U.S. national rugby team and director of Crusaders International Academy. When he visited Miami University this year to coach our rugby team for a week, his approach to weekly planning showed me how to bridge the gap between ambitious vision and daily execution.
+                </p>
+                <div class="strategy-cards">
+                    <div class="strategy-card">
+                        <span class="card-icon">🎯</span>
+                        <h3 class="card-title">Make Goals Immediate</h3>
+                        <p class="card-text">Transform long-term ambitions into daily actions with tangible rewards</p>
+                    </div>
+                    <div class="strategy-card">
+                        <span class="card-icon">💪</span>
+                        <h3 class="card-title">Make Distractions Costly</h3>
+                        <p class="card-text">Add friction and consequences to short-term temptations</p>
+                    </div>
+                    <div class="strategy-card">
+                        <span class="card-icon">🏗️</span>
+                        <h3 class="card-title">Build Systems</h3>
+                        <p class="card-text">Create structure that automates success—inspired by meeting Grant Keenan</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Goals Section -->
+        <section class="goals">
+            <div class="content" data-section="goals">
+                <h2>My Commitment: SMART Goals for the Next 6 Weeks</h2>
+                <div class="goal-container">
+                    <div class="goal-item">
+                        <span class="goal-number">1</span>
+                        <h3 class="goal-title">The Digital Detox Tax</h3>
+                        <p class="goal-description">
+                            Any minute spent on unproductive phone use (YouTube, Clash Royale, etc.) will cost me 1 push-up. I will use my phone's screen time tracker to log this and complete all owed push-ups at the end of each day before going to sleep.
+                        </p>
+                    </div>
+                    <div class="goal-item">
+                        <span class="goal-number">2</span>
+                        <h3 class="goal-title">Launching My CFA Journey</h3>
+                        <p class="goal-description">
+                            I will start my CFA Level 1 prep by first contacting two CFA charterholders from my Johnson internship and consulting with my dad by the end of this week for their study advice. Based on their input, I will then study for 2 total hours each week, split across at least two sessions.
+                        </p>
+                    </div>
+                    <div class="goal-item">
+                        <span class="goal-number">3</span>
+                        <h3 class="goal-title">The Sunday System</h3>
+                        <p class="goal-description">
+                            Every Sunday evening, I will block out 30 minutes to plan my week. This includes blocking time in my Google Calendar for my 2 hours of CFA studying and reviewing both my push-up penalty performance and how well I followed my plan from the previous week.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Accountability Section -->
+        <section class="accountability">
+            <div class="content" data-section="accountability">
+                <h2>My Personal Accountability</h2>
+                <div class="accountability-grid">
+                    <div class="accountability-card">
+                        <div class="accountability-icon">📋</div>
+                        <h3 class="accountability-title">Weekly Checklist</h3>
+                        <p class="accountability-text">Simple tracking system for all three goals</p>
+                    </div>
+                    <div class="accountability-card">
+                        <div class="accountability-icon">🤝</div>
+                        <h3 class="accountability-title">Partner Support</h3>
+                        <p class="accountability-text">Shared plan with Katelyn for external accountability</p>
+                    </div>
+                    <div class="accountability-card">
+                        <div class="accountability-icon">🔄</div>
+                        <h3 class="accountability-title">Sunday Updates</h3>
+                        <p class="accountability-text">Quick, honest progress check every Sunday</p>
+                    </div>
+                    <div class="accountability-card">
+                        <div class="accountability-icon">⚡</div>
+                        <h3 class="accountability-title">Immediate Cost</h3>
+                        <p class="accountability-text">Physical penalties ensure follow-through</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Closing Section -->
+        <section class="closing">
+            <div class="content" data-section="closing">
+                <div class="quote-box">
+                    <h2 style="margin-bottom: 2rem; color: #ffd89b;">Moving Forward</h2>
+                    <p class="problem-text" style="font-size: 1.3rem; line-height: 1.8; margin-bottom: 1.5rem;">
+                        My HBDI shows green as my lowest quadrant—the structured, process driven thinking that turns goals into reality. This plan directly challenges me to strengthen that weakness. Through these systems, I'm not just fighting distraction; I'm training myself to find satisfaction in discipline, to embrace the discomfort of delayed gratification, and to build the mental endurance my future demands.
+                    </p>
+                    <p class="cta-text" style="font-size: 1.4rem; font-weight: 600; color: #fff;">
+                        This is how I transform intention into action. 🚀
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.3,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all content sections
+        document.querySelectorAll('.content').forEach(content => {
+            observer.observe(content);
+        });
+
+        // Hide scroll indicator after first scroll
+        const container = document.getElementById('container');
+        const scrollIndicator = document.querySelector('.scroll-indicator');
+        
+        container.addEventListener('scroll', () => {
+            if (container.scrollTop > 100) {
+                scrollIndicator.style.opacity = '0';
+            } else {
+                scrollIndicator.style.opacity = '0.7';
+            }
+        });
+
+        // Smooth scroll behavior
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
